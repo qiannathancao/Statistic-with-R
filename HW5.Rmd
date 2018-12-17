@@ -1,0 +1,17 @@
+---
+output:
+  word_document: default
+  html_document: default
+---
+##"HW5_Qian Cao"
+###5.7 What population and samples
+a) Population is entire 153 English majors    
+b) Sample is 30 student randomly selected  
+c) Statistic is total of vote "Yes" or "No", counted by sum  
+d) Population parameter is sum of vote for either "Yes" or "No" from all 153 English major  
+e) From the POPULATION of all English major students, we sample 30 students out for evaluation, aiming to find the statistic by sum of sample votes, however the parameter of sum already exist but very costly to find out.   
+
+###5.38 Risk and insurance
+a) Unwise to 100 policies than thousands.    
+Becasue large random samples give the estimate close to the truth, hereby in order to approach miu=500, the samples of thousands reduse risk better than taking samples of 100
+
