@@ -1,0 +1,103 @@
+---
+output:
+  word_document: default
+  html_document: default
+---
+## HW_4_Qian Cao
+### Q1:4.57 Spell Checking software:
+a):
+```{r}
+x=c(0,1,2,3,4)
+y=c(0.1,0.3,0.3,0.2,0.1)
+barplot(y,width = 1,xlab = "Value of X", ylab = "Probability",space = 0)
+```
+<br>
+
+b):"At least one nonword error": P(X>=1) = 1-P(X=0) = 0.9  
+c):X<=3 stands for "Less than 4 nonword error (exclusive)"   
+P(X<=3) = 1-P(X=4) = 0.9  
+P(X<3)  = 1-P(X=3 or X=4) = 1-(.2+.1) = 0.7  
+
+### Q2:4.59 Uniform unmbers between 0 and 2:
+a):
+```{r}
+uniform = table(runif(100,min = 0,max = 2))
+barplot(uniform,xlab = "X random variable between 0 and 2", ylab = "Density")
+```  
+**b):**P(Y<=1.6) = (1.6-0)/2 = 0.8  
+**c):**P(0.5<Y<1.7) = (1.7-0.5)/2 = 0.6  
+**d):**P(Y>=.95) = (2-.95)/2 = 0.525
+
+### Q3:4.62 Normal appromimation for a sample proportion:
+a):mean=0.56, std=0.019
+```{r}
+p1=pnorm(.6,0.56,0.019)-pnorm(0.52,0.56,0.019)
+```
+p1 of P(0.52<=p<=.6) is `r round(p1,2)`
+<br>
+
+b):Considering the p>=0.72:
+```{r}
+p2=pnorm(.72,mean = .56,sd = 0.019,lower.tail = FALSE)
+```
+p2 of P(p>=072) is `r p2`  
+
+### Q4:4.71 Find Variance and STD:
+```{r}
+X=c(-1,0,1,2)
+P = c(0.3,0.2,0.3,0.2)
+X2 = (X-mean(X))^2
+variance=X2%*%P
+std=sqrt(variance)
+```
+Variance = `r variance` and Standard Deviation = `r std`
+<br>
+
+### Q5:4.112 Education and Income:  
+P(A): P(Prosperous) = 0.138    
+P(B): P(Educated)=0.261   
+P(A && B): P(Both event A and B happen) =0.082   
+P(A || B)=P(A)+P(B)-P(A&&B) = `r 0.138+0.261-0.082`
+
+### Q6:4.138 Sample surveys for sensitive issues:
+P(head) = 0.5
+P(plag)=0.3  
+P(non_plag)=1-P(plag)=1-0.3=0.7  
+**P(answer_no)** = P(head and non_plag) = P(head)P(non_plag)=0.35  
+
+**If P(plag)=0.2, then P(non_plag)=0.8**: P(answer_no) = 0.5*0.8=0.4  
+
+**If P(answer_no) = 0.39**: P(plagiarized) = 1- P(non_plagiatized) =1 - (0.39/0.5) = 0.22
+
+### Q7:Spam filter:
+P(Spam)=0.5  
+P(Non_spam)=0.5  
+i):  
+Given P(d&p) = P(both discount and password)  
+P(d&P|Spam)=0.2 * 0.4 = 0.08  
+P(d&P|Non_spam) = 0.002 * 0.004  
+**Therefore: the probablity of email with both "discount and password"is: ** 
+P(Spam|d&p)=P(d&p|Spam)/[P(d&p|Spam)+P(d&p|Non_spam)] = 0.08/(0.08+(0.002*0.004)) = 0.9999
+<br>
+
+ii):  
+P(p|Spam)=0.2  
+P(p|Non_spam)=0.004  
+**Therefore: the probablity of email with "password"is:**  
+P(Spam|p)=0.2/(0.2+0.004)=0.98
+
+### Q8: The Importance of Independence:
+i)**Sample Space:**
+S:{H,T,US,CA}
+<br>
+
+ii):CalculateP(A),P(B)andP(A&B)  
+**P(A)**= P(H1)*P(US) or P(H1)*P(CA) = 0.5*(p+q)  
+**P(B)**= P(H2)*P(US) or P(H2)*P(CA) = 0.5*(p+q)  
+**P(A and B)** = 0.25*(p+q)^2  
+A and B are independent  
+<br>
+
+iii): 
+
+

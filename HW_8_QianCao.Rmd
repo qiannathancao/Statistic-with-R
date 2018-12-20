@@ -1,0 +1,127 @@
+---
+title: "HW8_QianCao"
+output: word_document
+---
+
+### 8.63 Physical education requirement: 
+a):  
+Expanatory variables: number of institutions for public and private, number of institutions require PE 
+Response variables: percent of institutions require PE  
+
+b):Populations:  
+0.97 and 0.40 are population proportion of institutions require PE in 1920 and today respectively  
+
+c):Statistics:  
+X_pv=60, n_pv=225, X_pb=101,n_pb=129  
+p_pv_hat=60/225    
+p_pb_hat=101/129  
+D=p_pv_hat - p_pb_hat=-0.516    
+SEd=sqrt(p_pv_hat(1-p_pv_hat)/n_pv + p_pb_hat(1-p_pb_hat)/n_pb)=0.047
+
+d):  95%-CI calculation:  
+```{r}
+X_pv=60
+n_pv=225
+X_pb=101
+n_pb=129  
+p_pv_hat=X_pv/n_pv    
+p_pb_hat=X_pb/n_pb
+D=p_pv_hat - p_pb_hat
+print (D)
+SEd=sqrt(p_pv_hat*(1-p_pv_hat)/n_pv + p_pb_hat*(1-p_pb_hat)/n_pb)
+print(SEd)
+z_score=qnorm(c(0.025,0.975),0,1,lower.tail = TRUE)
+print (z_score)
+moe=z_score*SEd
+print (moe)
+CI_95 = D + moe
+print (CI_95)
+```
+95% CI: `r CI_95`  
+
+e): significance test to compare private and public: H0: p_pb = p_pv 
+```{r}
+p_hat = (X_pv+X_pb)/(n_pb+n_pv)
+print (p_hat)
+p_hat*(1-p_hat)
+
+SEdp = sqrt(p_hat*(1-p_hat)*(1/n_pb+1/n_pv))
+print (SEdp)
+z_score2=D/SEdp
+print (z_score2)
+p_value = pnorm(z_score2,0,1,lower.tail = TRUE)*2
+print (p_value)
+```
+p_value = `r p_value`, although we know the true P_VALUE is small
+
+g): `r round(p_pv_hat,4)*100`% private schools require PE, and `r round(p_pb_hat,4)*100`% public schools require PE.  
+Therefore the difference is statistically significant.  
+
+### 8.75 Where do you get your news:
+a):  
+Sample_size=2342  
+Count=1639  
+
+b):  
+Sample proportion = 1636/2342 = 70%  
+Standard error=sqrt(0.7*0.3/2342) = 0.0095  
+
+c):
+```{r}
+p_hat = 0.7
+SEp = sqrt(0.7*0.3/2342)
+print(SEp)
+z_score3 = qnorm(c(0.025,0.975),0,1,lower.tail = TRUE)
+moe=z_score3*SEp
+print(moe)
+CI_95= 0.7+moe
+print(CI_95)
+```
+95% CI is: `r CI_95`  
+
+d): No, this is a biased sampling, because we only did the survey from people who onw the laptop, and omit those not have laptop, which does not satisfies SRS (large-number) guidelines  
+
+### 8.77 Use a confidence interval for comparison
+```{r}
+n5_10=194+861
+n11_13=557+417
+x5_10=861
+x11_13=417
+p_hat1=x5_10/n5_10
+print (p_hat1)
+p_hat2=x11_13/n5_10
+print(p_hat2)
+D = p_hat1 - p_hat2
+SEd=sqrt(p_hat1* (1 - p_hat1)/n5_10 + p_hat2* (1- p_hat2)/ n11_13)
+print(SEd)
+z_score = qnorm(c(0.025,0.975),0,1,lower.tail = TRUE)
+print(z_score)
+moe = z_score*SEd
+print(moe)
+CI_95 = D+moe
+print (CI_95)
+```
+With 95% confidence, we can say that the difference in the proportions is between `r CI_95`.  
+Alternatively, we can report that difference in the proportion of 2 groups ages with calcium intake requirement in this population is `r round(D,4)*100`% with a 95% margin of error of `r round(moe[2],4)*100`%.
+
+### 8.95 Calculating sample sizes for two-sample problem: 
+```{r}
+p_hat = 0.5
+p_star = 0.5
+z_score = z_score = qnorm(0.975,0,1,lower.tail = TRUE) 
+moe = 0.055
+n = 0.5*(z_score/0.055)**2
+print (round(n,0))
+```
+Require a value of n: `r round(n,0)`.  
+Fomula: (1/2)*(z_score/moe)**2 
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,215 @@
+---
+title: "431_HW7_QianCao"
+output: word_document
+---
+
+### 7.81 Sales of small applicance across months
+a) Using H-mstp-C-C procedure：7 steps
+```{r}
+m1=53
+n1=60
+var1=12^2
+n2=58
+m2=50
+var2=10^2
+M = m1-m2
+df = min(n1,n2)-1
+T= qt(c(0.025,0.975),df = df)
+MOE = T[2]*sqrt(var1/n1+var2/n2)
+
+CI_lhs = round(M - MOE,2)
+CI_rhs = round(M + MOE,2)
+```
+95% CI interval for the difference in mean number of units sold is (`r CI_lhs` , `r CI_rhs`)   
+
+b) We are 95% confident that mean of sales difference falls in the rang `r CI_lhs` and `r CI_rhs`, thus the sales difference is potentially like to be at lower end.
+
+### 7.126 Two-sample t test vs matched pairs t
+a): Two-sample treatment
+```{r}
+load("~/Documents/MSIT/3. Stats 431/R/Chapter 7/EX07-126PAIRED.rda")
+pair = `EX07-126PAIRED`
+sample_mean_1 = mean(pair$Group1)
+sample_mean_2 = mean(pair$Group2)
+n = length(pair$Group1)
+variance_1 = var(pair$Group1)
+variance_2 = var(pair$Group2)
+degreeOfFreedom = min(length(pair$Group1),length(pair$Group2))-1
+tscore = ((sample_mean_1-sample_mean_2)-0)/sqrt(variance_1/n+variance_2/n)
+pvalue = 2*pt(tscore,df=degreeOfFreedom,lower.tail = TRUE)
+```
+sample_mean_group1 = `r sample_mean_1`  
+sample_mean_group2 = `r sample_mean_2`  
+sample_variance_group1 = `r variance_1`  
+sample_variance_group2 = `r variance_2`
+tscore = `r tscore` 
+pvalue = `r pvalue`  
+
+b): Pair-sample treatment
+```{r}
+n = length(pair[,1])
+diff_sample = pair$Group1 - pair$Group2
+diff_mean = mean(diff_sample)
+diff_variance = var(diff_sample)
+diff_std = sd(diff_sample)
+diff_tscore = diff_mean/(diff_std/sqrt(n))
+diff_pvalue = 2*pt(diff_tscore,df = n-1,lower.tail = TRUE)
+```
+Pair_sample_mean = `r diff_mean`  
+Pair_sample_variance = `r diff_std^2`  
+Pair_sample_tscore = `r diff_tscore`  
+Pair_sample_pvalue = `r diff_pvalue`
+
+c): Null Hypothese is there is no difference between 2 groups.Test-I has large pvalue which implies the null hypothese cannot be rejected, whereas, test-II has relativly small pvalue, we may consider to reject the null hypothese.  
+
+### 7.128 Average service time
+H0: chain's average is same: U1=U2
+Ha: U1 != U2
+```{r}
+n1 = 308
+n2 = 317
+x_mean1=158.03
+x_mean2=189.49
+std1=33.8
+std2=41.3
+mean_diff = x_mean1 - x_mean2
+
+tscore = mean_diff/sqrt(std1^2/n1 + std2^2/n2)
+pvalue=2*pt(tscore,df = min(n1,n2)-1,lower.tail = TRUE)
+
+t_star = qt(c(0.025,0.975),df=min(n1,n2))
+    
+CI_lhs = round(mean_diff + t_star[1]*sqrt(std1^2/n1 + std2^2/n2),0)
+CI_rhs = round(mean_diff + t_star[2]*sqrt(std1^2/n1 + std2^2/n2),0)
+
+```
+a):  
+pvalue = `r pvalue` is small, therefore we reject Null Hypothese, and in favor of alaternative hypothese: there exists the difference between 2 chains. 
+
+b):  
+95% CI is: (`r CI_lhs` , `r CI_rhs`) for the difference in average service time.  
+
+c):  
+We are 95% confident that they will encounter the difference in the CI calculated above.  
+
+### 7.143 Do women perform better in school
+We can assume group of female and male could have equal variance of GPA and IQ scores respectively.
+```{r}
+load("~/Documents/MSIT/3. Stats 431/R/Chapter 7/EX07-143GRADES.rda")
+grades = `EX07-143GRADES`
+grade_female = grades[which(grades$Gender=='1'),]
+grade_male = grades[which(grades$Gender=='2'),]
+
+hist(grade_female$GPA)
+hist(grade_female$IQ)
+hist(grade_male$GPA)
+hist(grade_male$IQ)
+
+male_GPA_mean = mean(grade_male$GPA)
+male_IQ_mean = mean(grade_male$IQ)
+
+female_GPA_mean = mean(grade_female$GPA)
+female_IQ_mean = mean(grade_female$IQ)
+
+n_female = length(grade_female[,1])
+n_male = length(grade_male[,1])
+
+female_GPA_std = sd(grade_female$GPA)
+female_IQ_std = sd(grade_female$IQ)
+male_GPA_std = sd(grade_male$GPA)
+male_IQ_std = sd(grade_male$IQ)
+
+pooled_GPA_std = sqrt(((n_female - 1)*female_GPA_std^2 + (n_male - 1)*male_GPA_std^2)/(n_female + n_male -2))
+pooled_IQ_std = sqrt(((n_female - 1)*female_IQ_std^2 + (n_male - 1)*male_IQ_std^2)/(n_female + n_male -2))
+
+pool_df = n_female+n_male -2
+
+diff_GPA_mean = female_GPA_mean - male_GPA_mean
+diff_GPA_se = pooled_GPA_std*sqrt(1/n_female + 1/n_male)
+diff_IQ_mean = female_IQ_mean - male_IQ_mean
+diff_IQ_se = pooled_IQ_std*sqrt(1/n_female + 1/n_male)
+
+
+tscore_GPA = diff_GPA_mean/diff_GPA_se
+pvalue_GPA = 2*pt(tscore_GPA,df = pool_df,lower.tail = FALSE)
+
+tscore_IQ = diff_IQ_mean/diff_IQ_se
+pvalue_IQ = 2*pt(tscore_IQ,df = pool_df,lower.tail = TRUE)
+
+t_star_GPA = qt(c(0.025,0.975),df = pool_df,lower.tail = TRUE)
+t_star_IQ = qt(c(0.025,0.975),df = pool_df,lower.tail = TRUE)
+
+MOE_GPA = t_star_GPA * diff_GPA_se
+MOE_IQ = t_star_IQ * diff_IQ_se
+
+CI_GPA_diff_lhs = round(diff_GPA_mean + MOE_GPA[1],1) 
+CI_GPA_diff_rhs = round(diff_GPA_mean + MOE_GPA[2],1)
+  
+CI_IQ_diff_lhs = round(diff_IQ_mean + MOE_IQ[1],1)
+CI_IQ_diff_rhs = round(diff_IQ_mean + MOE_IQ[2],1)
+```
+
+a-1): pvalue_GPA_difference = `r pvalue_GPA` is large enough not to reject the hypothese: there is no difference between male and female on GPA  
+
+a-2): pvalue_IQ_difference  = `r pvalue_IQ` is also large enough not to reject the hypothese: there is no difference between male and female on IQ  
+
+b-1): CI of GPA_diff is (`r CI_GPA_diff_lhs` , `r CI_GPA_diff_rhs`)  
+
+b-2): CI of IQ_diff is (`r CI_IQ_diff_lhs` , `r CI_IQ_diff_rhs`)  
+
+
+### 8.29 P-hat and the normal distribution
+```{r}
+p_par = 0.4
+n1=40
+n2=80
+dof1=n1-1
+dof2=n2-1
+pvalue=0.05
+
+tscore_40=qt(c(0.025,0.975),df = dof1,lower.tail = TRUE)
+p_hat_40 = round(tscore_40[2]*sqrt(p_par*(1-p_par)/n1)+p_par,2)
+
+tscore_80 = qt(c(0.025,0.975),df = dof2,lower.tail = TRUE)
+p_hat_80 = round(tscore_80[2]*sqrt(p_par*(1-p_par)/n2)+p_par,2)
+```
+a): sample proportion w/ sample size n = 40 is `r p_hat_40`  
+
+b): sample proportion w/ sample size n = 80 is `r p_hat_80` 
+
+c): Sketch t-bell shape distribution below:  
+```{r}
+curve(dt(x, 10), from = -3, to = 3, col = "orange",xlab = "quantile", ylab = "density", lwd = 2)
+curve(dt(x, 500), from = -3, to = 3, col = "blue",xlab = "quantile", ylab = "density", add = TRUE,lwd = 2)
+legend("topleft", legend = paste0("n = ", c(40, 80)),
+       col = c("orange","blue"),
+       lty = 1, lwd = 2)
+```
+
+### 8.36 Can we use the Z test
+a): n=30, H0: p=0.3 >> np = 9 < 15  
+This does NOT comply with Roburstness, shall not use Z-test  
+
+b): n=60,H0: p=0.2  >> np = 12 < 15    
+This does NOT comply with Roburstness, shall not use Z-test    
+
+c): n=100, H0: p=0.12 >> np = 12 < 15  
+This does NOT comply with Roburstness, shall not use Z-test    
+
+d): n=150, H0: p=0.04 >> np = 6 < 15  
+This does NOT comply with Roburstness, shall not use Z-test 
+
+### 8.40 Is there interet in a new product
+```{r}
+MOE = 0.25
+zstar = qnorm(0.95,0,1,lower.tail = TRUE)
+sample_size = round(0.25*(zstar/MOE)^2,0)
+```
+For approaching 95% MOE be 0.25 or less, sample size needs to be at least `r sample_size`
+
+
+
+
+
+
+

@@ -1,0 +1,61 @@
+---
+title: "HW7_2_QianCao"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### 8.29 P-hat and the normal distribution
+```{r}
+p_par = 0.4
+n1=40
+n2=80
+dof1=n1-1
+dof2=n2-1
+pvalue=0.05
+
+tscore_40=qt(c(0.025,0.975),df = dof1,lower.tail = TRUE)
+p_hat_40 = round(tscore_40[2]*sqrt(p_par*(1-p_par)/n1)+p_par,2)
+
+tscore_80 = qt(c(0.025,0.975),df = dof2,lower.tail = TRUE)
+p_hat_80 = round(tscore_80[2]*sqrt(p_par*(1-p_par)/n2)+p_par,2)
+```
+a): sample proportion w/ sample size n = 40 is `r p_hat_40`  
+
+b): sample proportion w/ sample size n = 80 is `r p_hat_80` 
+
+c): Sketch t-bell shape distribution below:  
+```{r}
+curve(dt(x, 10), from = -3, to = 3, col = "orange",xlab = "quantile", ylab = "density", lwd = 2)
+curve(dt(x, 500), from = -3, to = 3, col = "blue",xlab = "quantile", ylab = "density", add = TRUE,lwd = 2)
+legend("topleft", legend = paste0("n = ", c(40, 80)),
+       col = c("orange","blue"),
+       lty = 1, lwd = 2)
+```
+
+### 8.36 Can we use the Z test
+a): n=30, H0: p=0.3 >> np = 9 < 15  
+This does NOT comply with Roburstness, shall not use Z-test  
+
+b): n=60,H0: p=0.2  >> np = 12 < 15    
+This does NOT comply with Roburstness, shall not use Z-test    
+
+c): n=100, H0: p=0.12 >> np = 12 < 15  
+This does NOT comply with Roburstness, shall not use Z-test    
+
+d): n=150, H0: p=0.04 >> np = 6 < 15  
+This does NOT comply with Roburstness, shall not use Z-test 
+
+### 8.40 Is there interet in a new product
+```{r}
+MOE = 0.25
+zstar = qnorm(0.95,0,1,lower.tail = TRUE)
+sample_size = round(0.25*(zstar/MOE)^2,0)
+```
+For approaching 95% MOE be 0.25 or less, sample size needs to be at least `r sample_size`
+
+
+
+
